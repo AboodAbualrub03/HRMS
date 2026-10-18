@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace HRMS.Dtos
+namespace HRMS.Dtos.Employee
 {
     public class SaveEmployeeDto
     {

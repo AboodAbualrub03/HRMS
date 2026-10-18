@@ -1,4 +1,4 @@
-﻿using HRMS.Dtos;
+﻿using HRMS.Dtos.Employee;
 using HRMS.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -6,13 +6,12 @@ using static HRMS.Controllers.EmployeesController;
 
 namespace HRMS.Controllers
 {
-    //Data Annotations => Class , Methods , Properties , Parameters
-    [Route("api/[controller]")]//api/Employees
+    [Route("api/[controller]")]
     [ApiController]
     public partial class EmployeesController : ControllerBase
     {
 
-        public static  List<Employee> employees = new List<Employee>
+        public static List<Employee> employees = new List<Employee>
         {
                 new Employee { Id = 1, FirstName = "Ahmad", LastName="Nasser", Email="Ahmad@123",
         Position = "Developer", BirthDate = new DateTime(1995,1,25), PhoneNumber = "+96279545135",
@@ -32,18 +31,22 @@ namespace HRMS.Controllers
 
 };
 
-   
+
 
 
         [HttpGet]
-        public IActionResult GetByCriteria([FromQuery]SearchEmployeeDto searchEmployeeDto)
+        public IActionResult GetByCriteria([FromQuery] SearchEmployeeDto searchEmployeeDto)
         {
 
             var data = from emp in employees
                        where (searchEmployeeDto.Postion == null || emp.Position.ToUpper().Contains(searchEmployeeDto.Postion.ToUpper())) &&
-                        (searchEmployeeDto.Name == null || emp.FirstName.ToUpper().Contains(searchEmployeeDto.Name.ToUpper()))&&
-                        (searchEmployeeDto.IsActive == null || emp.IsActive == searchEmployeeDto.IsActive)
-                       orderby emp.Id descending
+                        (searchEmployeeDto.Name == null || emp.FirstName.ToUpper().Contains(searchEmployeeDto.Name.ToUpper())) &&
+                        (searchEmployeeDto.IsActive == null || emp.IsActive == searchEmployeeDto.IsActive) &&
+                        (searchEmployeeDto.MinSalary == null || emp.Salary>= searchEmployeeDto.MinSalary.Value) &&
+                        (searchEmployeeDto.MaxSalary == null || emp.Salary <= searchEmployeeDto.MaxSalary.Value) && 
+                        (searchEmployeeDto.BirthYear == null || emp.BirthDate.Year == searchEmployeeDto.BirthYear.Value)&&
+                        (searchEmployeeDto.PhoneNumber == null || emp.PhoneNumber.Contains(searchEmployeeDto.PhoneNumber))
+
                        select new EmployeeDto {
 
                            Id = emp.Id,
@@ -54,7 +57,17 @@ namespace HRMS.Controllers
                            EndDate = emp.EndDate,
                            Salary = emp.Salary
                        };
+             if(searchEmployeeDto.SalaryDescending)
+            {
+                data = data.OrderByDescending(emp => emp.Salary)
+                    .ThenByDescending(emp => emp.Id);
+            }
 
+            else
+            {
+                data = data.OrderBy(emp => emp.Salary)
+              .ThenByDescending(emp => emp.Id);
+            }
             return Ok(data);
 
         }
@@ -80,7 +93,21 @@ namespace HRMS.Controllers
 
             return Ok(data);
         }
-    
+        [HttpGet("statistics")]
+        public IActionResult GetStatistics()
+        {
+            var data = employees
+                .GroupBy(emp => emp.Position)
+                .Select(group => new
+                {
+                    Position = group.Key,
+                    EmployeeCount = group.Count(),
+                    AverageSalary = group.Average(emp => emp.Salary)
+                })
+                .ToList();
+
+            return Ok(data);
+        }
         [HttpPost]
         public IActionResult Craete(SaveEmployeeDto employeeDto) {
 
@@ -155,7 +182,11 @@ namespace HRMS.Controllers
 
             return Ok();
 
+
+
         }
+
+       
 
 
     }
