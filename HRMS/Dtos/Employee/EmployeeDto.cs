@@ -1,24 +1,22 @@
-﻿namespace HRMS.Controllers
+﻿namespace HRMS.Dtos.Employee
 {
-    public partial class EmployeesController
+
+    // DTO : Data Transfer Object
+    public class EmployeeDto
     {
-        //DTO : Data Transfer Object
-
-        public class EmployeeDto
-        {
-           public long Id { get; set; }
-
-           public string FullName { get; set; }
-
-           public string Position { get; set; }
-
-           public DateTime BirthDate { get; set; }
-            public DateTime StartDate { get; set; }
-
-            public DateTime? EndDate { get; set; }
-            public decimal? Salary { get; set; }
+        public long Id { get; set; }
+        public string FullName { get; set; }
+        public string Position { get; set; }
+        public DateTime BirthDate { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
+        public decimal? Salary { get; set; }
+        public long? DepartmentId { get; set; }
+        public string? DepartmentName { get; set; }
+        public long? ManagerId { get; set; }
+        public string? ManagerName { get; set; }
 
 
-        }
+
     }
 }

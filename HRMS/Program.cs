@@ -1,4 +1,7 @@
 
+using HRMS.DbContexts;
+using Microsoft.EntityFrameworkCore;
+
 namespace HRMS
 {
     public class Program
@@ -18,6 +21,9 @@ namespace HRMS
             builder.Services.AddSwaggerGen();
 
 
+            builder.Services.AddDbContext<HRMSContext>(options =>
+            options.UseSqlServer(builder.Configuration.GetConnectionString("HRMSContext"))
+            );
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
