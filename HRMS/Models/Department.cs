@@ -9,5 +9,8 @@
         public string Description { get; set; }
 
         public int? FloorNumber { get; set; }
+
+        
+
     }
 }
