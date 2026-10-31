@@ -40,8 +40,13 @@ namespace HRMS.DbContexts
                
                 );
 
+            // BCrypt.Net.BCrypt.HashPassword("Admin@123") = $2a$11$Dx9BCzZ2EOOtGddMK0GXsOZcwZ1N0r.FgXaz65w3VGuwn/Y8sjzt.
 
+            modelBuilder.Entity<User>()
+                .HasData(
+                 new User { Id = 1,Username = "Admin",HashedPassword = "$2a$11$Dx9BCzZ2EOOtGddMK0GXsOZcwZ1N0r.FgXaz65w3VGuwn/Y8sjzt.", IsAdmin = true}
 
+                );
         }
         
         public DbSet<Employee> Employees { get; set; }
@@ -49,5 +54,6 @@ namespace HRMS.DbContexts
 
         public DbSet<Lookup>Lookups { get; set; }
 
+        public DbSet<User> Users { get; set; }
     }
 }

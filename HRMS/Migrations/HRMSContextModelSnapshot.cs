@@ -157,7 +157,7 @@ namespace HRMS.Migrations
                             Id = 4L,
                             MajorCode = 0,
                             MinorCode = 3,
-                            Name = ""
+                            Name = "HR"
                         },
                         new
                         {
@@ -186,6 +186,40 @@ namespace HRMS.Migrations
                             MajorCode = 1,
                             MinorCode = 3,
                             Name = "Technical"
+                        });
+                });
+
+            modelBuilder.Entity("HRMS.Models.User", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("HashedPassword")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsAdmin")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            HashedPassword = "$2a$11$Dx9BCzZ2EOOtGddMK0GXsOZcwZ1N0r.FgXaz65w3VGuwn/Y8sjzt.",
+                            IsAdmin = true,
+                            Username = "Admin"
                         });
                 });
 
